@@ -29,7 +29,7 @@ export default function RootLayout({
         </nav>
         <div className="flex-1 max-h-screen overflow-y-auto scrollbar-hide relative">
           <Header />
-          <main className="bg-secondary px-8">{children}</main>
+          <main className="bg-secondary px-8 min-h-full">{children}</main>
           <Footer />
         </div>
       </body>

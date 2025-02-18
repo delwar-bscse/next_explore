@@ -1,5 +1,6 @@
 "use client";
 
+import { Select, ConfigProvider } from 'antd';
 import React from "react";
 import {
   AreaChart,
@@ -12,9 +13,22 @@ import {
   Legend,
 } from "recharts";
 
+const handleChange = (value: { value: string; label: React.ReactNode }) => {
+  console.log(value);
+};
+
+const theme={
+  components: {
+    Select: {
+      hoverBorderColor: "#F28705",
+      activeBorderColor: "#F28705",
+    },
+  },
+}
+
 // Sample Data
 const data = [
-  { name: "Mo", totalUsers: 400, activeUsers: 200 },
+  { name: "Mo", totalUsers: 200, activeUsers: 50 },
   { name: "Tu", totalUsers: 1500, activeUsers: 1000 },
   { name: "We", totalUsers: 1100, activeUsers: 800 },
   { name: "Th", totalUsers: 2000, activeUsers: 1500 },
@@ -37,50 +51,65 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 export default function UserEngagementChart() {
   return (
-    <div className="w-full bg-white p-6 rounded-xl shadow-md">
+    <div className="w-full bg-white p-6 rounded-xl shadow-md space-y-8">
       {/* Chart Header */}
-      <div className="flex justify-between items-center px-4 mb-4">
-        <h2 className="text-2xl font-bold">User Engagement</h2>
-        <div className="flex gap-4 items-center">
-          <Legend
-            wrapperStyle={{ display: "flex", gap: "10px" }}
-            payload={[
-              { value: "Total Users", type: "circle", color: "#FF4D4D" },
-              { value: "Active Users", type: "circle", color: "#FFA07A" },
-            ]}
-          />
-          <select className="border p-2 rounded-lg">
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-          </select>
-        </div>
-      </div>
+      <div className='flex justify-between items-center px-8'>
+              <div className='text-3xl font-semibold'>New Users</div>
+              <div>
+                <ConfigProvider theme={theme}>
+                <Select
+                  labelInValue
+                  size='large'
+                  defaultValue={{ value: "weekly", label: "Weekly" }}
+                  style={{ width: 120,  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "weekly",
+                      label: "Weekly",
+                    },
+                    {
+                      value: "monthly",
+                      label: "Monthly",
+                    },
+                  ]}
+                />
+                </ConfigProvider>
+              </div>
+            </div>
 
       {/* Chart */}
-      <ResponsiveContainer width="100%" height={400}>
-        <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+      <ResponsiveContainer width="100%" height={424}>
+        <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
           <defs>
             {/* Gradient for Total Users */}
             <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#FF4D4D" stopOpacity={0.2} />
-              <stop offset="95%" stopColor="#FF4D4D" stopOpacity={0} />
+              <stop offset="5%" stopColor="#EFF6FF" />
+              <stop offset="95%" stopColor="#FFFFFF" />
             </linearGradient>
             {/* Gradient for Active Users */}
             <linearGradient id="colorActive" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#FFA07A" stopOpacity={0.5} />
-              <stop offset="95%" stopColor="#FFA07A" stopOpacity={0} />
+            <stop offset="5%" stopColor="#EFF6FF" />
+            <stop offset="95%" stopColor="#FFFFFF" />
             </linearGradient>
           </defs>
 
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="name" tick={{ fill: "#777" }} />
-          <YAxis tick={{ fill: "#777" }} />
+          <XAxis dataKey="name" tick={{ fill: "#777" }} axisLine={false} tickLine={false}/>
+          <YAxis tick={{ fill: "#777" }} axisLine={false} tickLine={false} />
           <Tooltip content={<CustomTooltip />} />
-
+          <Legend
+          verticalAlign="bottom"
+          height={0}
+            payload={[
+              { value: "Total Users", type: "circle", color: "#F28705" },
+              { value: "Active Users", type: "circle", color: "#F6AF58" },
+            ]}
+          />
           {/* Total Users Area */}
-          <Area type="monotone" dataKey="totalUsers" stroke="#FF4D4D" strokeWidth={2} fillOpacity={1} fill="url(#colorTotal)" />
+          <Area type="monotone" dataKey="totalUsers" stroke="#F28705" strokeWidth={3} fillOpacity={1} fill="url(#colorTotal)" />
           {/* Active Users Area */}
-          <Area type="monotone" dataKey="activeUsers" stroke="#FFA07A" strokeWidth={2} fillOpacity={1} fill="url(#colorActive)" />
+          <Area type="monotone" dataKey="activeUsers" stroke="#F6AF58" strokeWidth={3} fillOpacity={1} fill="url(#colorActive)" />
         </AreaChart>
       </ResponsiveContainer>
     </div>
